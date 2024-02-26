@@ -1,0 +1,4 @@
+ServiceHost = "0.0.0.0"
+ServicePort = 8080
+BaseURL = "https://api.coingecko.com/api/v3"
+TTL = 1
