@@ -2,8 +2,6 @@ package app
 
 import (
 	"context"
-	"time"
-
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/config"
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/http"
 )
@@ -21,8 +19,7 @@ func New(ctx context.Context) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	cfg.TTL = time.Minute
-	h := http.NewHandler()
+	h := http.NewHandler(cfg.BaseURL)
 	// инициализирует объект Application
 	app := &Application{
 		Config:  cfg,

@@ -2,12 +2,10 @@ package config
 
 import (
 	"context"
-	"os"
-	"time"
-
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // Config Структура конфигурации;
@@ -17,7 +15,6 @@ type Config struct {
 	ServiceHost string
 	ServicePort int
 	BaseURL     string
-	TTL         time.Duration
 }
 
 // NewConfig Создаёт новый объект конфигурации, загружая данные из файла конфигурации
