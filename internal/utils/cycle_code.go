@@ -10,7 +10,7 @@ type CycleCode struct {
 	Code uint
 }
 
-func (c *CycleCode) Enсode() {
+func (c *CycleCode) Encode() {
 	c.Code <<= 3
 	c.Code = c.Code ^ remainderFinding(c.Code)
 }
@@ -26,7 +26,7 @@ func (c *CycleCode) ErrorSimulate() {
 	}
 }
 
-func (c *CycleCode) Deсode() {
+func (c *CycleCode) Decode() {
 	var count uint
 	сodeArray := uintToBitsArray(c.Code)
 

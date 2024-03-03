@@ -19,9 +19,9 @@ func (s *Segment) SplitSegmentToCycleCodes() []utils.CycleCode {
 
 func (s *Segment) Simulate(cycleCodes []utils.CycleCode) []utils.CycleCode {
 	for _, code := range cycleCodes {
-		code.EnCode()
+		code.Encode()
 		code.ErrorSimulate()
-		code.DeCode()
+		code.Decode()
 	}
 
 	return cycleCodes
