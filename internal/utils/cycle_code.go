@@ -10,7 +10,7 @@ type CycleCode struct {
 	Code uint
 }
 
-func (c *CycleCode) EnCode() {
+func (c *CycleCode) Enсode() {
 	c.Code <<= 3
 	c.Code = c.Code ^ remainderFinding(c.Code)
 }
@@ -26,26 +26,26 @@ func (c *CycleCode) ErrorSimulate() {
 	}
 }
 
-func (c *CycleCode) DeCode() {
+func (c *CycleCode) Deсode() {
 	var count uint
-	CodeArray := uintToBitsArray(c.Code)
+	сodeArray := uintToBitsArray(c.Code)
 
 	var end bool
 
-	for remains := remainderFinding(bitsArrayToUint(CodeArray)); !end; remains = remainderFinding(bitsArrayToUint(CodeArray)) {
+	for remains := remainderFinding(bitsArrayToUint(сodeArray)); !end; remains = remainderFinding(bitsArrayToUint(сodeArray)) {
 		if bits.Len(remains) <= 1 {
 			end = true
-			CodeArray[len(CodeArray)-1] = CodeArray[len(CodeArray)-1] ^ 1
+			сodeArray[len(сodeArray)-1] = сodeArray[len(сodeArray)-1] ^ 1
 			break
 		}
 
-		CodeArray = cyclicShiftLeft(CodeArray)
+		сodeArray = cyclicShiftLeft(сodeArray)
 		count++
 	}
 
 	for ; count > 0; count-- {
-		CodeArray = cyclicShiftRight(CodeArray)
+		сodeArray = cyclicShiftRight(сodeArray)
 	}
 
-	c.Code = bitsArrayToUint(CodeArray[:len(CodeArray)-3])
+	c.Code = bitsArrayToUint(сodeArray[:len(сodeArray)-3])
 }
