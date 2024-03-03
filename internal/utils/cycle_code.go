@@ -3,7 +3,6 @@ package utils
 import (
 	"math/bits"
 	"math/rand"
-	"time"
 )
 
 type CycleCode struct {
@@ -16,13 +15,14 @@ func (c *CycleCode) Encode() {
 }
 
 func (c *CycleCode) ErrorSimulate() {
-	var globalRand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	randomValue := globalRand.Intn(10)
+	randomValue := rand.Intn(10)
 
 	if randomValue <= 0 {
-		errorPosition := uint(rand.Intn(bits.Len(c.Code)))
-		c.Code ^= (1 << errorPosition)
+		bitsLength := bits.Len(c.Code)
+		if bitsLength > 0 {
+			errorPosition := uint(rand.Intn(bitsLength))
+			c.Code ^= (1 << errorPosition)
+		}
 	}
 }
 

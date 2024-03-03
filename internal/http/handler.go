@@ -3,10 +3,11 @@ package http
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/segment"
-	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
+
+	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/segment"
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
@@ -26,7 +27,9 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 
 	segment.SplitCycleCodesToSegment(segment.Simulate(segment.SplitSegmentToCycleCodes()))
 
-	if rand.Intn(100) < 2 {
+	randomNumber := rand.Intn(100)
+
+	if randomNumber < 2 {
 		c.JSON(http.StatusOK, gin.H{"message": "сегмент утерян"})
 		return
 	}
