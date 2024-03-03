@@ -11,7 +11,7 @@ import (
 func (app *Application) Run() {
 	r := gin.Default()
 
-	r.POST("/api/v1/segment", app.Handler.EncodeSegmentSimulate)
+	r.POST("/channel/code", app.Handler.EncodeSegmentSimulate)
 
 	addr := fmt.Sprintf("%s:%d", app.Config.ServiceHost, app.Config.ServicePort)
 	r.Run(addr)

@@ -1,3 +1,3 @@
 ServiceHost = "0.0.0.0"
-ServicePort = 8080
-BaseURL = "http://localhost:8081/api/v1/get"
+ServicePort = 8081
+BaseURL = "http://localhost:8080/http/transfer"
