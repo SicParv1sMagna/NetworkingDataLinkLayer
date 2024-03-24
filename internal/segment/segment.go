@@ -2,6 +2,7 @@ package segment
 
 import (
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/utils"
+	log "github.com/sirupsen/logrus"
 )
 
 func (s *Segment) SplitSegmentToCycleCodes() []utils.CycleCode {
@@ -13,7 +14,8 @@ func (s *Segment) SplitSegmentToCycleCodes() []utils.CycleCode {
 			cycleCodes = append(cycleCodes, utils.CycleCode{Code: code})
 		}
 	}
-
+	
+	log.Info("полученный сегмент разделен на биты: ", cycleCodes)
 	return cycleCodes
 }
 
@@ -24,6 +26,7 @@ func (s *Segment) Simulate(cycleCodes []utils.CycleCode) []utils.CycleCode {
 		code.Decode()
 	}
 
+	log.Info("симуляция (кодирование, ошибка и декодирование) прошла успешно, полученная последовательность: ", cycleCodes)
 	return cycleCodes
 }
 
@@ -31,4 +34,5 @@ func (s *Segment) SplitCycleCodesToSegment(cycleCodes []utils.CycleCode) {
 	for _, code := range cycleCodes {
 		s.Payload = append(s.Payload, byte(code.Code))
 	}
+	log.Info("сегмент успешно собран: ", cycleCodes)
 }

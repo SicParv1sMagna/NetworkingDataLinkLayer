@@ -1,3 +1,4 @@
 ServiceHost = "0.0.0.0"
 ServicePort = 8081
 BaseURL = "http://localhost:8080/http/transfer"
+ErrorLevel = "info"
