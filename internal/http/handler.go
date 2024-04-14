@@ -43,7 +43,7 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 
 	if randomNumber < 2 {
 		log.Info("потеря сегмента")
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "сегмент утерян"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "сегмент утерян"})
 		return
 	}
 
