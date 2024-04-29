@@ -33,7 +33,7 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 	var segment segment.Segment
 	if err := c.BindJSON(&segment); err != nil {
 		log.Error(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "не удалось прочитать JSON: "+ err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "не удалось прочитать JSON: " + err.Error()})
 		return
 	}
 
@@ -43,21 +43,21 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 
 	if randomNumber < 2 {
 		log.Info("потеря сегмента")
-		c.JSON(http.StatusOK, gin.H{"message": "сегмент утерян"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "сегмент утерян"})
 		return
 	}
 
 	segmentJSON, err := json.Marshal(segment)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "ошибка при кодировании сегмента в JSON: "+ err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "ошибка при кодировании сегмента в JSON: " + err.Error()})
 		return
 	}
 
 	resp, err := http.Post(h.BaseURL, "application/json", bytes.NewBuffer(segmentJSON))
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ошибка при отправке сегмента на эндпоинт:: "+ err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ошибка при отправке сегмента на эндпоинт:: " + err.Error()})
 		return
 	}
 	defer resp.Body.Close()
