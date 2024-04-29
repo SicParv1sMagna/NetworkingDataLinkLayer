@@ -7,5 +7,5 @@ type Segment struct {
 	TotalSegments uint      `json:"total_segments" example:"10"`
 	SenderName    string    `json:"sender_name" example:"Марк Гревцов"`
 	SegmentNumber uint      `json:"segment_number" example:"1"`
-	Payload []byte `json:"payload" example:"116,104,105,115,32,105,115,32,97,32"`
+	Payload       []byte    `json:"payload"`
 }
