@@ -8,4 +8,5 @@ type Segment struct {
 	SenderName    string    `json:"sender_name" example:"Марк Гревцов"`
 	SegmentNumber uint      `json:"segment_number" example:"1"`
 	Payload       []byte    `json:"payload"`
+	HadError      bool      `json:"had_error"`
 }
