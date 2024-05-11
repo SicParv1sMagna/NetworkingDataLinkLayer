@@ -30,14 +30,16 @@ func NewHandler(baseURL string) *Handler {
 // @Failure 500 {object} swag.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /channel/code [post]
 func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
-	var segment segment.Segment
-	if err := c.BindJSON(&segment); err != nil {
+	var seg segment.Segment
+	if err := c.BindJSON(&seg); err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "не удалось прочитать JSON: " + err.Error()})
 		return
 	}
 
-	segment.SplitCycleCodesToSegment(segment.Simulate(segment.SplitSegmentToCycleCodes()))
+	cycleCode := seg.Simulate(seg.SplitSegmentToCycleCodes())
+	seg.Payload = nil
+	seg.SplitCycleCodesToSegment(cycleCode)
 
 	randomNumber := rand.Intn(100)
 
@@ -47,22 +49,22 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 		return
 	}
 
-	segmentJSON, err := json.Marshal(segment)
+	segmentJSON, err := json.Marshal(seg)
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "ошибка при кодировании сегмента в JSON: " + err.Error()})
 		return
 	}
 
-	resp, err := http.Post(h.BaseURL, "application/json", bytes.NewBuffer(segmentJSON))
+	response, err := http.Post(h.BaseURL, "application/json", bytes.NewBuffer(segmentJSON))
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ошибка при отправке сегмента на эндпоинт:: " + err.Error()})
 		return
 	}
-	defer resp.Body.Close()
+	defer response.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if response.StatusCode != http.StatusOK {
 		log.Error("ошибка: неверный код состояния ответа")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ошибка: неверный код состояния ответа"})
 		return
