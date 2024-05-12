@@ -2,7 +2,7 @@ package segment
 
 import (
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/utils"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -13,8 +13,13 @@ const (
 )
 
 // SplitSegmentToCycleCodes разбивает сегмент на цикл-коды
-func (s *Segment) SplitSegmentToCycleCodes() []utils.CycleCode {
+func (s *Segment) SplitSegmentToCycleCodes(log *logrus.Logger) []utils.CycleCode {
+	const op = "segment.Segment.SplitSegmentToCycleCodes"
+	log.WithField("operation", op)
+
 	var cycleCodes []utils.CycleCode
+
+	log.Info("разделение сегмента на цикл-коды")
 
 	for _, byteValue := range s.Payload {
 		// Получаем старшие 4 бита
@@ -25,26 +30,35 @@ func (s *Segment) SplitSegmentToCycleCodes() []utils.CycleCode {
 		cycleCodes = append(cycleCodes, utils.CycleCode{Code: lowerCode})
 	}
 
-	log.Info("Сегмент успешно разделен на цикл-коды: ", cycleCodes)
 	return cycleCodes
 }
 
 // Simulate моделирует кодирование, ошибки и декодирование для каждого цикл-кода в последовательности
-func (s *Segment) Simulate(cycleCodes []utils.CycleCode) []utils.CycleCode {
+func (s *Segment) Simulate(cycleCodes []utils.CycleCode, log *logrus.Logger) []utils.CycleCode {
+	const op = "segment.Segment.Simulate"
+	log.WithField("operation", op)
+
+	log.Info("cимуляция (кодирование, ошибка и декодирование)")
+
 	for _, code := range cycleCodes {
 		code.Encode()
-		code.ErrorSimulate()
+		if code.ErrorSimulate() {
+			s.HadError = true
+			log.WithField("code", code).Info("в части сегмента произошла ошибка с вероятностью 10%")
+		}
 		code.Decode()
 	}
 
-	log.Info("Симуляция (кодирование, ошибка и декодирование) прошла успешно, полученная последовательность: ", cycleCodes)
 	return cycleCodes
 }
 
 // SplitCycleCodesToSegment собирает последовательность цикл-кодов обратно в сегмент
-func (s *Segment) SplitCycleCodesToSegment(cycleCodes []utils.CycleCode) {
+func (s *Segment) SplitCycleCodesToSegment(cycleCodes []utils.CycleCode, log *logrus.Logger) {
+	const op = "segment.Segment.Simulate"
+	log.WithField("operation", op)
+
 	if len(cycleCodes)%2 != 0 {
-		log.Warn("Нечетное количество цикл-кодов. Последний цикл-код будет проигнорирован.")
+		log.Warn("нечетное количество цикл-кодов. Последний цикл-код будет проигнорирован.")
 	}
 
 	var payload []byte
@@ -55,5 +69,5 @@ func (s *Segment) SplitCycleCodesToSegment(cycleCodes []utils.CycleCode) {
 	}
 	s.Payload = payload
 
-	log.Info("Сегмент успешно собран: ", s.Payload)
+	log.WithField("segment", s).Info("сегмент собран")
 }

@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/segment.Segment"
+                            "$ref": "#/definitions/segment.SegmentRequest"
                         }
                     }
                 ],
@@ -60,7 +60,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "segment.Segment": {
+        "segment.SegmentRequest": {
             "type": "object",
             "properties": {
                 "id": {
@@ -71,19 +71,7 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "type": "integer"
-                    },
-                    "example": [
-                        116,
-                        104,
-                        105,
-                        115,
-                        32,
-                        105,
-                        115,
-                        32,
-                        97,
-                        32
-                    ]
+                    }
                 },
                 "segment_number": {
                     "type": "integer",

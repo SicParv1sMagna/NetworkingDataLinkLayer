@@ -14,7 +14,7 @@ func (c *CycleCode) Encode() {
 	c.Code = c.Code ^ remainderFinding(c.Code)
 }
 
-func (c *CycleCode) ErrorSimulate() {
+func (c *CycleCode) ErrorSimulate() bool {
 	randomValue := rand.Intn(10)
 
 	if randomValue <= 0 {
@@ -22,8 +22,10 @@ func (c *CycleCode) ErrorSimulate() {
 		if bitsLength > 0 {
 			errorPosition := uint(rand.Intn(bitsLength))
 			c.Code ^= (1 << errorPosition)
+			return true
 		}
 	}
+	return false
 }
 
 func (c *CycleCode) Decode() {

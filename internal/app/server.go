@@ -2,9 +2,8 @@ package app
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/docs"
+	ginlogrus "github.com/Toorop/gin-logrus"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -13,7 +12,13 @@ import (
 
 // Run запускает приложение
 func (app *Application) Run() {
-	r := gin.Default()
+	const op = "app.Application.Run"
+	log := app.log.WithField("operation", op)
+
+	gin.SetMode(gin.ReleaseMode)
+
+	router := gin.New()
+	router.Use(ginlogrus.Logger(log), gin.Recovery())
 
 	docs.SwaggerInfo.Title = "DataLinkLayer RestAPI"
 	docs.SwaggerInfo.Description = "API server for DataLinkLayer application"
@@ -21,22 +26,27 @@ func (app *Application) Run() {
 	docs.SwaggerInfo.Host = "localhost:8081"
 	docs.SwaggerInfo.BasePath = "/api"
 
-	r.Use(cors.New(cors.Config{
+	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
-	
-	ApiGroup := r.Group("/api") 
+
+	ApiGroup := router.Group("/api")
 	{
 		ApiGroup.POST("/channel/code", app.Handler.EncodeSegmentSimulate)
-	} 
-	
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
-	addr := fmt.Sprintf("%s:%d", app.Config.ServiceHost, app.Config.ServicePort)
-	r.Run(addr)
-	
-	log.Println("Server down")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	addr := fmt.Sprintf("%s:%d", app.Config.Host, app.Config.Port)
+
+	log.WithField("addr", addr).Info("HTTP server is running")
+	err := router.Run(addr)
+	if err != nil {
+		log.WithError(err).Error("ошибка запуска HTTP сервера")
+	}
+
+	log.Info("Server down")
 }

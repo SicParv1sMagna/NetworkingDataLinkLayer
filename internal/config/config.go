@@ -1,62 +1,28 @@
 package config
 
 import (
-	"context"
-	"os"
-
+	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"log"
+	"os"
 )
 
-// Config Структура конфигурации;
-// Содержит все конфигурационные данные о сервисе;
-// автоподгружается при изменении исходного файла config.toml
 type Config struct {
-	ServiceHost string
-	ServicePort int
-	BaseURL     string
-	ErrorLevel  string
+	Host    string `env:"CHANNEL_LEVEL_HOST" env-required:"true"`
+	Port    int32  `env:"CHANNEL_LEVEL_PORT" env-required:"true"`
+	BaseURL string `env:"TRANSPORT_LEVEL_URL" env-required:"true"`
 }
 
-// NewConfig Создаёт новый объект конфигурации, загружая данные из файла конфигурации
-func NewConfig(ctx context.Context) (*Config, error) {
-	var err error
-
-	configName := "config"
-	_ = godotenv.Load()
-	if os.Getenv("CONFIG_NAME") != "" {
-		configName = os.Getenv("CONFIG_NAME")
+func MustLoad() *Config {
+	var cfg Config
+	if _, err := os.Stat(".env"); err == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Fatalf("unable to load .env file: %v", err)
+		}
 	}
 
-	viper.SetConfigName(configName)
-	viper.SetConfigType("toml")
-	viper.AddConfigPath("config")
-	viper.AddConfigPath(".")
-	viper.WatchConfig()
-
-	err = viper.ReadInConfig()
-	if err != nil {
-		return nil, err
+	if err := env.Parse(&cfg); err != nil {
+		log.Fatalf("error parsing environment variables: %v", err)
 	}
-
-	cfg := &Config{}
-	err = viper.Unmarshal(cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	level, err := log.ParseLevel(cfg.ErrorLevel)
-	if err != nil {
-		panic(err)
-	}
-
-	log.SetLevel(level)
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetReportCaller(true)
-	
-	log.Info("config parsed")
-	log.Println(cfg)
-	
-	return cfg, nil
+	return &cfg
 }

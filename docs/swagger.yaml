@@ -1,21 +1,10 @@
 definitions:
-  segment.Segment:
+  segment.SegmentRequest:
     properties:
       id:
         example: "2024-03-09T12:04:08Z"
         type: string
       payload:
-        example:
-        - 116
-        - 104
-        - 105
-        - 115
-        - 32
-        - 105
-        - 115
-        - 32
-        - 97
-        - 32
         items:
           type: integer
         type: array
@@ -49,7 +38,7 @@ paths:
         name: segment
         required: true
         schema:
-          $ref: '#/definitions/segment.Segment'
+          $ref: '#/definitions/segment.SegmentRequest'
       produces:
       - application/json
       responses:
