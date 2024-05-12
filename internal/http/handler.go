@@ -3,9 +3,10 @@ package http
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/SicParv1sMagna/NetworkingDataLinkLayer/internal/segment"
 	"github.com/gin-gonic/gin"
@@ -59,8 +60,9 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 
 	if randomNumber < 2 {
 		log.WithField("segment", seg).Warn("потеря сегмента с вероятностью 2%")
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "сегмент утерян"})
-		return
+		c.JSON(http.StatusBadRequest, gin.H{"error": "сегмент утерян"})
+
+		// return
 	}
 
 	segmentJSON, err := json.Marshal(seg)
