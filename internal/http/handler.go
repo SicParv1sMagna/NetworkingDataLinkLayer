@@ -72,6 +72,8 @@ func (h *Handler) EncodeSegmentSimulate(c *gin.Context) {
 		return
 	}
 
+	log.Info("Transfer method", bytes.NewBuffer(segmentJSON))
+
 	response, err := http.Post(h.BaseURL, "application/json", bytes.NewBuffer(segmentJSON))
 	if err != nil {
 		log.WithError(err).Error("ошибка при отправке сегмента на эндпоинт")
